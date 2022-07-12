@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html>
+
+    <style>
+        table, th, td{
+            border: 2px solid rgb(94, 94, 94);
+            border-collapse: collapse;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        th, td{
+            background-color: rgb(59, 183, 255);
+        }
+        h1{
+            font-family: 'Courier New', Courier, monospace;
+            color: white;
+        }
+        h2{
+            font-family: 'Courier New', Courier, monospace;
+            size: 10cm;
+            color: white;
+        }
+        h3{
+            font-family: 'Courier New', Courier, monospace;
+            size: 10cm;
+            color: rgb(251, 221, 0);
+        }
+        p{
+            font-family: 'Courier New', Courier, monospace;
+            size: 1cm;
+            color: white;
+        }
+    </style>
+
+    <head>
+
+     <title>Election Page</title>
+     <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
+
+    </head>
+
+    <body style="background-color:rgb(94, 94, 94);">
+
+     <h1>Election Voting</h1>
+
+     <h2>Phase:</h2> 
+     <h3 id="votephase">Set Up</h3>
+
+     <button id="btn-login">Connect Metamask</button>
+     <button id="btn-logout">Disconect Metamask</button>
+     <button id="btn-gettokens">Get Tokens</button>
+     <button id="btn-refresh">Refresh</button>
+
+     <table class = "table table-striped">
+
+        <tr class = "bg-info">
+            <th>ID</th>
+            <th>Name</th>
+            <th>Votes</th>
+            <th>Action</th>
+        </tr>
+
+        <tbody id = "myTable">
+
+        </tbody>
+
+     </table>
+
+     <p>Output: <br> Null. <br> </p>
+
+     <p>User:</p><p id = "user-address">Not Connected.</p>
+
+    <script type="text/javascript" src="./main.js"></script>
+
+    </body>
+    
+</html>
