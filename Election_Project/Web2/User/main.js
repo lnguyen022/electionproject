@@ -4,7 +4,7 @@ Moralis.start({ serverUrl, appId });
 const currentUser= Moralis.User.current();
 
 const ABI= 
-[ 
+[ //test commit
 	[
 		{
 			"inputs": [
