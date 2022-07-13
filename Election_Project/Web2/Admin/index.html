@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+    <style>
+        table 
+        {
+            border: 2px solid white;
+            width: 500px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+        }
+
+        th, td 
+        {
+            text-align: center;
+            padding: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            background-color:rgb(232, 245, 255)
+
+        }        
+        th 
+        {
+          background-color: rgb(84, 139, 182);
+          color: white;
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: normal;
+        }
+        h1
+        {
+            font-size: 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            background-color: rgb(84, 139, 182);
+            color: white;
+            padding: 15px 32px;
+        }
+        p
+        {
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+        }
+        label
+        {
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+        }
+        button
+        {
+            border: none;
+            background-color: rgb(84, 139, 182);
+            padding: 5px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            transition-duration: 0.4;
+            width: 175px;
+        }
+        button:hover
+        {
+            background-color: rgb(105, 177, 231);
+        }
+        .div1
+        {
+            background-color: rgb(84, 139, 182);
+            width: 500px;
+            padding: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            font-weight: bold;
+        }
+        .div2
+        {
+            text-align: center;
+            padding: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            background-color:rgb(232, 245, 255);
+            width: 500px;
+            padding: 15px;
+        }
+        div
+        {
+            text-align: left;
+            padding: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            background-color:rgb(232, 245, 255);
+            width: 500px;
+            padding: 15px;
+        }
+        input
+        {
+            outline: none;
+            border: none;
+            border-bottom: 2px solid rgb(84, 139, 182);
+            background-color:rgb(232, 245, 255)
+
+        }
+    </style>
+    <head>
+        <title>Test Project Admin Panel</title>
+        <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    </head>
+    <body>
+        <h1>Election Admin Panel</h1>
+
+        <div id="phases" class="div1">
+            Phase: 
+            <br>Cycle:
+            <br>Connected Wallet: 
+        </div>
+
+        <button id="btn-refresh">Refresh</button>
+
+        <table class="table">
+            <tr class="table-info">
+                <th>Candidate ID#</th>
+                <th>Candidate Name</th>
+                <th>Votes</th>
+                <th>Edit</th>
+            </tr>
+            <tbody id="table-body">
+                <tr>
+                    <td>1</td>
+                    <td>Test</td>
+                    <td>0</td>
+                    <td><input type= "text" id= "test1" placeholder="change name"></td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>Test</td>
+                    <td>0</td>
+                    <td><input type= "text" id= "test2" placeholder="change name"></td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>Test</td>
+                    <td>0</td>
+                    <td><input type= "text" id= "test3" placeholder="change name"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="div2">
+            <button id="btn-updatenames">Update Names</button>
+            <button id="btn-phasechange">Change Phase</button>
+        </div>
+
+        <div>
+            Add Candidate: <input type="text" id="inp-addcandidate" placeholder="name">
+            <button id="btn-addcandidate">Add</button>
+        </div>
+
+        <script type="text/javascript" src="./main.js"></script>
+    </body>
+</html>
