@@ -1,77 +1,103 @@
 <!DOCTYPE html>
-
 <html>
-
     <style>
-        table, th, td{
-            border: 2px solid rgb(94, 94, 94);
-            border-collapse: collapse;
-            font-family: 'Courier New', Courier, monospace;
+        table 
+        {
+            border: 2px solid white;
+            width: 50%;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
         }
-        th, td{
-            background-color: rgb(59, 183, 255);
+
+        th, td 
+        {
+            text-align: center;
+            padding: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
         }
-        h1{
-            font-family: 'Courier New', Courier, monospace;
+        
+        tr:nth-child(even){background-color: #f2f2f2}
+        
+        th 
+        {
+          background-color: rgb(84, 139, 182);
+          color: white;
+          font-family: Arial, Helvetica, sans-serif;
+          font-weight: normal;
+        }
+        h1
+        {
+            font-size: 40px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: bold;
+            background-color: rgb(84, 139, 182);
             color: white;
+            padding: 15px 32px;
         }
-        h2{
-            font-family: 'Courier New', Courier, monospace;
-            size: 10cm;
+        p
+        {
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+        }
+        button
+        {
+            border: none;
+            background-color: rgb(84, 139, 182);
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
             color: white;
+            font-family: Arial, Helvetica, sans-serif;
+            transition-duration: 0.4;
         }
-        h3{
-            font-family: 'Courier New', Courier, monospace;
-            size: 10cm;
-            color: rgb(251, 221, 0);
+        button:hover
+        {
+            background-color: rgb(105, 177, 231);
         }
-        p{
-            font-family: 'Courier New', Courier, monospace;
-            size: 1cm;
+        div
+        {
+            background-color: rgb(84, 139, 182);
+            width: 47.5%;
+            padding: 15px;
+            font-family: Arial, Helvetica, sans-serif;
             color: white;
+            font-weight: bold;
+
         }
     </style>
-
     <head>
-
-     <title>Election Page</title>
-     <script src="https://unpkg.com/moralis/dist/moralis.js"></script>
-
+        <title>Test Project</title>
+        <script src="https://unpkg.com/@metamask/detect-provider/dist/detect-provider.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
     </head>
+    <body>
+        <h1>Election</h1>
 
-    <body style="background-color:rgb(94, 94, 94);">
+        <div id="phases">Phase: 
+            <br>Cycle:
+            <br>Connected Wallet: 
+        </div>
+        
+        <table class="table">
+            <tr class="table-info">
+                <th>Candidate ID#</th>
+                <th>Candidate Name</th>
+                <th>Votes</th>
+                <th>Action</th>
+            </tr>
+            <tbody id="table-body">
+            </tbody>
+        </table>
 
-     <h1>Election Voting</h1>
+        <button id="btn-gettoken">Get Tokens</button>
+        <button id="btn-refresh">Refresh</button>
+        <button id="btn-approve">Approve Contract</button>
 
-     <h2>Phase:</h2> 
-     <h3 id="votephase">Set Up</h3>
-
-     <button id="btn-login">Connect Metamask</button>
-     <button id="btn-logout">Disconect Metamask</button>
-     <button id="btn-gettokens">Get Tokens</button>
-     <button id="btn-refresh">Refresh</button>
-
-     <table class = "table table-striped">
-
-        <tr class = "bg-info">
-            <th>ID</th>
-            <th>Name</th>
-            <th>Votes</th>
-            <th>Action</th>
-        </tr>
-
-        <tbody id = "myTable">
-
-        </tbody>
-
-     </table>
-
-     <p>Output: <br> Null. <br> </p>
-
-     <p>User:</p><p id = "user-address">Not Connected.</p>
-
-    <script type="text/javascript" src="./main.js"></script>
-
+        <script type="text/javascript" src="./main.js"></script>
     </body>
-    
 </html>
