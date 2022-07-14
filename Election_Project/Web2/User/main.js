@@ -781,6 +781,7 @@ let voterCount
 let winner
 let phase= "default" // SetUp= 1, voting= 2, result= 3
 let candidates= []
+let _showResults = false
 
 async function init()
 {
@@ -795,11 +796,7 @@ async function init()
         tokenABI, tokenAddress
     )
 
-    const accounts= await web3.eth.getAccounts()
-    const _account= accounts[0]
-
     contract= _contract
-    account= _account
     token= _token
 
     updateData()
@@ -811,6 +808,7 @@ async function updateData()
     cycleCount= await contract.methods.cycleCount().call()
     voterCount= await contract.methods.voterCount().call()
     let temp= await contract.methods.getPhase().call()
+	candidates = []
 
     for(let i= 1; i<candidateCount; i++)
     {
@@ -831,14 +829,22 @@ async function updateData()
     }
     if(temp== 3)
     {
-        phase= "Result"
+        phase= "Results"
         winner= getWinner()
     }
 }
 
 async function approve()
 {
+	const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    const _account= accounts[0]
+	account = _account
+
     token.methods.approve(contractAddress, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({from:account})
+
+	var lbl= document.getElementById('lbl-wallet')
+	lbl.classList.add("show")
+	lbl.innerHTML= "Connected: " + account
 }
 
 function updateFE()
@@ -846,12 +852,13 @@ function updateFE()
     var div= document.getElementById('phases')
     var table= document.getElementById('table-body')
 
+	table.innerHTML = ""
+
     div.innerHTML = `
         Phase: ${phase}
         <br>
         Cycle: ${cycleCount}
-        <br>
-        Connected Wallet: ${account}`
+      	`
 
         for(let i=0; i<candidateCount; i++)
         {
@@ -866,9 +873,30 @@ function updateFE()
         }
 }
 
-function getWinner()
+async function getWinner()
 {
+	winner= await contract.methods.getWinner().call()
+	let i= parseInt(winner)
+	winner = candidates[i-1].candName
+	
+	const bod= document.body
+	bod.innerHTML= ""
+	bod.innerHTML= `
+		<h1>Election</h1>
+		<h3 id="win" onmouseover= "mouseOver()" onmouseout= "mouseOut()" onclick= "showResult()">
+		Winner: ${winner}
+		</h3>
+		`
+}
 
+function mouseOver()
+{
+	document.getElementById("win").innerHTML= "Show Results >>"
+}
+
+function mouseOut()
+{
+	document.getElementById("win").innerHTML= "Winner: "+ winner
 }
 
 function vote(num)
@@ -876,7 +904,42 @@ function vote(num)
     contract.methods.addVote(num).send({from:account})
 }
 
+function refresh()
+{
+	updateData()
+}
 
+function showResult()
+{
+	if(_showResults == false)
+	{
+		_showResults = true
+		document.body.innerHTML+= `
+			<table class="table">
+				<tr class="table-info">
+					<th>Candidate ID#</th>
+					<th>Candidate Name</th>
+					<th>Votes</th>
+				</tr>
+				<tbody id="table-body">
+				</tbody>
+			</table>`
+
+			var table= document.getElementById('table-body')
+
+			for(let i=0; i<candidateCount; i++)
+			{
+				var row= `
+				<tr>
+				<td>${candidates[i].candID}</td>
+				<td>${candidates[i].candName}</td>
+				<td>${candidates[i].votes}</td>
+				</tr>`
+				table.innerHTML+= row
+			}
+	}
+}
 
 init()
-document.getElementById("btn-approve").onclick = approve
+document.getElementById("btn-approve").onclick= approve
+document.getElementById("btn-refresh").onclick= refresh

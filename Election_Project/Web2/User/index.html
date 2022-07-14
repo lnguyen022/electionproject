@@ -4,18 +4,21 @@
         table 
         {
             border: 2px solid white;
-            width: 50%;
+            width: 500px;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: normal;
+            border-radius: 2px;
         }
 
         th, td 
         {
-            text-align: center;
+            text-align: left;
             padding: 8px;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: normal;
-            background-color:rgb(232, 245, 255)
+            background-color:rgb(232, 245, 255);
+            border-radius: 2px;
+
         }        
         th 
         {
@@ -26,12 +29,14 @@
         }
         h1
         {
-            font-size: 40px;
+            font-size: 50px;
             font-family: Arial, Helvetica, sans-serif;
             font-weight: bold;
             background-color: rgb(84, 139, 182);
             color: white;
             padding: 15px 32px;
+            border-radius: 2px;
+            margin-bottom: 5px;
         }
         p
         {
@@ -39,11 +44,18 @@
             font-family: Arial, Helvetica, sans-serif;
             font-weight: normal;
         }
+        label
+        {
+            font-size: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            border-radius: 2px;
+        }
         button
         {
             border: none;
             background-color: rgb(84, 139, 182);
-            padding: 15px 32px;
+            padding: 5px 32px;
             text-align: center;
             text-decoration: none;
             font-size: 16px;
@@ -51,21 +63,148 @@
             cursor: pointer;
             color: white;
             font-family: Arial, Helvetica, sans-serif;
-            transition-duration: 0.4;
+            width: 175px;
+            transition-duration: 0.4s;
+            overflow: hidden;
+            position: relative;
+            border-radius: 2px;
         }
         button:hover
         {
             background-color: rgb(105, 177, 231);
         }
-        div
+        button:after 
+        {
+            content: "";
+            background: #f1f1f1;
+            display: block;
+            position: absolute;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -32px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
+        }
+        button:active:after 
+        {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
+        }
+        .div1
         {
             background-color: rgb(84, 139, 182);
-            width: 47.5%;
             padding: 15px;
             font-family: Arial, Helvetica, sans-serif;
             color: white;
             font-weight: bold;
-
+            border-radius: 2px;
+        }
+        h2
+        {
+            background-color: rgb(40, 236, 154);
+            padding: 15px;
+            font-family: Arial, Helvetica, sans-serif;
+            color: white;
+            font-weight: normal;
+            border-radius: 2px;
+            margin-top: 5px;
+            width: 500px;
+            font-size: 16px;
+            transition-duration: 1s;
+            opacity: 0;
+        }
+        .show
+        {
+            opacity: 1;
+        }
+        div
+        {
+            text-align: left;
+            padding: 8px;
+            font-family: Arial, Helvetica, sans-serif;
+            font-weight: normal;
+            background-color:rgb(232, 245, 255);
+            width: 500px;
+            padding: 15px;
+            border-radius: 2px;
+        }
+        input[type=text]
+        {
+            outline: none;
+            border: none;
+            border-bottom: 2px solid rgb(84, 139, 182);
+            background-color:rgb(232, 245, 255);
+            transition: width 0.4s ease-in-out;
+            width: 30%;
+            border-radius: 2px;
+        }
+        input[type=text]:focus 
+        {
+            width: 80%;
+        }
+        h3
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: rgb(40, 236, 154);
+            border-radius: 2px;
+            color: white;
+            padding: 15px 32px;
+            font-size: 50px;
+            margin-top: 5px;
+            margin-left: 20px;
+            transition: 0.5s ease-in-out;
+            overflow: hidden;
+            text-align: left;
+            text-decoration: none;
+            cursor: pointer;
+            overflow: hidden;
+            position: relative;
+        }
+        h3:hover
+        {
+            margin-left: 100px;
+            background-color: rgb(28, 174, 113);
+        }
+        h3:after 
+        {
+            content: "";
+            background: #f1f1f1;
+            display: block;
+            position: absolute;
+            padding-top: 300%;
+            padding-left: 350%;
+            margin-left: -32px !important;
+            margin-top: -120%;
+            opacity: 0;
+            transition: all 0.8s
+        }
+        h3:active:after 
+        {
+            padding: 0;
+            margin: 0;
+            opacity: 1;
+            transition: 0s
+        }
+        select
+        {
+            background-color: white;
+            padding: 5px 32px;
+            text-align: left;
+            text-decoration: none;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            color: black;
+            font-family: Arial, Helvetica, sans-serif;
+            width: 200px;
+            transition-duration: 0.4s;
+            overflow: hidden;
+            position: relative;
+            border-radius: 2px;
+            border-color: rgb(84, 139, 182);
         }
     </style>
     <head>
@@ -76,12 +215,13 @@
     <body>
         <h1>Election</h1>
 
-        <div id="phases">
+        <div id="phases" class="div1">
             Phase: 
             <br>Cycle:
-            <br>Connected Wallet: 
         </div>
-        
+
+        <h2 id="lbl-wallet">Connected: </h2>
+
         <table class="table">
             <tr class="table-info">
                 <th>Candidate ID#</th>
@@ -93,9 +233,9 @@
             </tbody>
         </table>
 
+        <button id="btn-approve">Connect Wallet</button>
         <button id="btn-gettoken">Get Tokens</button>
         <button id="btn-refresh">Refresh</button>
-        <button id="btn-approve">Approve Contract</button>
 
         <script type="text/javascript" src="./main.js"></script>
     </body>
