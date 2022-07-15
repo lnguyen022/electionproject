@@ -29,11 +29,10 @@ contract ElectSmartContract is Ownable
         bool receivedToken;
     }
 
-    uint public candidateCount = 1; //Total # of candidates
+    uint public candidateCount = 0; //Total # of candidates
     uint public voterCount = 0; //Total # of user voted
-    address public deductAddress = 0xdb4D508855BD1420eED27Adf68B56EbE3745968a; //Address to send tokens to for vote
     uint public cycleCount = 1; 
-    uint private winner = 1;
+    uint private winner;
 
     mapping(uint => candidate) public totalCandidate;
     mapping (address => userVoted) public hasVoted;
@@ -50,37 +49,38 @@ contract ElectSmartContract is Ownable
         token = _token;
     }
 
-    function startVote() public onlyOwner 
+    function changePhase() public 
     {
-        require(voteStart == phase.setUp, "Not setUp phase");
-        voteStart = phase.voting;
-        emit phaseChange("voting");
+        if(voteStart == phase.setUp)
+        {
+            voteStart = phase.voting;
+            emit phaseChange("Voting");
+        }
+        else if(voteStart == phase.voting)
+        {
+            voteStart = phase.result;
+            emit phaseChange("Results");
+            endVote();
+
+        }
+        else if(voteStart == phase.result)
+        {
+            voteStart = phase.setUp;
+            emit phaseChange("setUp");
+        }
     }
 
-    function setUpVote() public onlyOwner
+    function endVote() private
     {
-        require(voteStart == phase.result, "Not result phase");
-        voteStart = phase.setUp;
-        candidateCount = 1;
-        voterCount = 0;
-        cycleCount++;
-        emit phaseChange("set Up");
-    }
+        require(voteStart == phase.result, "Not Result phase");
 
-    function endVote() public onlyOwner 
-    {
-        require(voteStart == phase.voting, "Not voting phase");
-        voteStart = phase.result;
-
-        for(uint i = 1; i<=candidateCount; i++)
+        for(uint i = 1; i<= candidateCount; i++)
         {
             if(totalCandidate[i].votes > totalCandidate[winner].votes)
             {
                 winner = i;
             }
         }
-
-        emit phaseChange("result");
     }
 
     function addCandidate(string[] memory _name) public onlyOwner 
@@ -89,18 +89,10 @@ contract ElectSmartContract is Ownable
         
         for(uint i = 0; i< _name.length; i++)
         {
-            totalCandidate[candidateCount] = candidate(candidateCount, _name[i], 0); //set
-            candidateCount++; //increment total candidates
+            totalCandidate[i] = candidate(i, _name[i], 0); //set
         }
-    }
 
-    function editCandidate (uint _id, string memory _name) public onlyOwner 
-    {
-        require(voteStart == phase.setUp, "Not set up phase");
-        require(_id != 0, "Must be valid candidate");
-        require(_id <= candidateCount, "Must be valid candidate");
-
-        totalCandidate[_id] = candidate(_id, _name, 0); //set
+        candidateCount = _name.length;
     }
 
     function addVote(uint _idCount) public 
@@ -110,8 +102,9 @@ contract ElectSmartContract is Ownable
         require(_idCount <= candidateCount, "Require valid candidate");
         require(token.balanceOf(msg.sender) != 0, "Invalid balance");
         require(hasVoted[msg.sender].cycleVoted != cycleCount, "You have already voted");
+        require(hasVoted[msg.sender].receivedToken == true, "You don't have tokens");
 
-        token.transferFrom(msg.sender, deductAddress, 1*(10**18));
+        token.transferFrom(msg.sender, address(this), 1*(10**18));
 
         totalCandidate[_idCount].votes++;
         hasVoted[msg.sender].cycleVoted = cycleCount;
@@ -124,7 +117,8 @@ contract ElectSmartContract is Ownable
     function cancelVote() public 
     {
         require(voteStart == phase.voting, "Not voting phase");
-        require(hasVoted[msg.sender].cycleVoted == cycleCount, "You have not voted");
+        require(hasVoted[msg.sender].cycleVoted == cycleCount, "You haven't voted");
+        require(hasVoted[msg.sender].receivedToken == false, "You haven't voted");
         
         hasVoted[msg.sender].cycleVoted = hasVoted[msg.sender].cycleVoted - 1;
 
@@ -133,7 +127,7 @@ contract ElectSmartContract is Ownable
         token.transfer(msg.sender, 1*(10**18));
         totalCandidate[_temp].votes = totalCandidate[_temp].votes - 1;
         hasVoted[msg.sender].votedFor = 0;
-        hasVoted[msg.sender].receivedToken = false;
+        hasVoted[msg.sender].receivedToken = true;
 
         emit userCanceledVote(msg.sender, _temp);
     }
@@ -144,16 +138,38 @@ contract ElectSmartContract is Ownable
         return winner;
     }
 
-    function getBackToken() public
+    function getToken() public
     {
-        require(voteStart == phase.result, "not result phase");
         require(hasVoted[msg.sender].receivedToken == false, "You've already received your tokens");
 
-        if(hasVoted[msg.sender].votedFor != winner)
-        {
             token.transfer(msg.sender, 1*(10**18));
             hasVoted[msg.sender].receivedToken = true;
             emit userReceivedToken(msg.sender);
+    }
+
+    function getPhase() public view returns(uint _phase)
+    {
+        if(voteStart == phase.setUp)
+        {
+            return 1;
         }
+        if(voteStart == phase.voting)
+        {
+            return 2;
+        }
+        if(voteStart == phase.result)
+        {
+            return 3;
+        }
+    }
+
+    function withdrawFunds() public onlyOwner
+    {
+        token.transfer(msg.sender, (address(this).balance*(10**18)));
+    }
+
+    function addFunds(uint amount) public onlyOwner
+    {
+        token.transferFrom(msg.sender, address(this), amount*(10**18));
     }
 }

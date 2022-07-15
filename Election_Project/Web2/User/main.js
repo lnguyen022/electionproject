@@ -1,96 +1,7 @@
 
-const contractAddress= '0x00Af458D48819735183C7d521F8C40e00479101A'
+const contractAddress= '0xEFC8b8577798b357276278758EE7a33b17DbdbcF'
 const tokenAddress= '0x5944F2F4af55167Bc57Fa2130be6c2212C6d474b'
 const contractABI= [
-	{
-		"inputs": [
-			{
-				"internalType": "string[]",
-				"name": "_name",
-				"type": "string[]"
-			}
-		],
-		"name": "addCandidate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_idCount",
-				"type": "uint256"
-			}
-		],
-		"name": "addVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "cancelVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "string",
-				"name": "_name",
-				"type": "string"
-			}
-		],
-		"name": "editCandidate",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "endVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "getBackToken",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "transferOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "_token",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
-	},
 	{
 		"anonymous": false,
 		"inputs": [
@@ -122,27 +33,6 @@ const contractABI= [
 		],
 		"name": "phaseChange",
 		"type": "event"
-	},
-	{
-		"inputs": [],
-		"name": "renounceOwnership",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "setUpVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "startVote",
-		"outputs": [],
-		"stateMutability": "nonpayable",
-		"type": "function"
 	},
 	{
 		"anonymous": false,
@@ -196,6 +86,104 @@ const contractABI= [
 		"type": "event"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "string[]",
+				"name": "_name",
+				"type": "string[]"
+			}
+		],
+		"name": "addCandidate",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "amount",
+				"type": "uint256"
+			}
+		],
+		"name": "addFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "uint256",
+				"name": "_idCount",
+				"type": "uint256"
+			}
+		],
+		"name": "addVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "cancelVote",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "changePhase",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getToken",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "renounceOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "transferOwnership",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "withdrawFunds",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "contract ERC20",
+				"name": "_token",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
 		"inputs": [],
 		"name": "candidateCount",
 		"outputs": [
@@ -216,19 +204,6 @@ const contractABI= [
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"inputs": [],
-		"name": "deductAddress",
-		"outputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
 			}
 		],
 		"stateMutability": "view",
@@ -779,27 +754,85 @@ let candidateCount
 let cycleCount
 let voterCount
 let winner
-let phase= "default" // SetUp= 1, voting= 2, result= 3
+let phase // SetUp= 1, voting= 2, result= 3
 let candidates= []
-let _showResults = false
+let _showResults= false
 
 async function init()
 {
-    const provider= await detectEthereumProvider()
+	let body= document.body
+	body.innerHTML= `
+	<h1>Election</h1>
 
-    const web3= new Web3(provider)
-    const _contract= new web3.eth.Contract(
-        contractABI, contractAddress
-    )
+        <div id="phases" class="div1">
+            Phase: 
+            <br>Cycle:
+        </div>
 
-    const _token= new web3.eth.Contract(
-        tokenABI, tokenAddress
-    )
+        <h2 id="lbl-wallet">Connected: </h2>
 
-    contract= _contract
-    token= _token
+        <table class="table">
+            <tr class="table-info">
+                <th>Candidate ID#</th>
+                <th>Candidate Name</th>
+                <th>Votes</th>
+                <th>Action</th>
+            </tr>
+            <tbody id="table-body">
+            </tbody>
+        </table>
 
-    updateData()
+        <button id="btn-refresh" onclick="refresh()">Refresh</button>
+	`
+	var lbl= document.getElementById('lbl-wallet')
+		lbl.classList.add("show")
+		lbl.innerHTML= "Connected: " + account
+
+	updateData()
+}
+
+async function approve()
+{
+		const provider= await detectEthereumProvider()
+
+		const web3= new Web3(provider)
+		const _contract= new web3.eth.Contract(
+			contractABI, contractAddress
+		)
+
+		const _token= new web3.eth.Contract(
+			tokenABI, tokenAddress
+		)
+
+		const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+		const _account= accounts[0]
+
+		account = _account
+		contract= _contract
+		token= _token
+
+		token.methods.approve(contractAddress, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({from:account})
+
+
+		let display= document.getElementById('cnt-wallet')
+			display.style.fontSize= "20px"
+			display.innerHTML= `Wallet: ${account}`
+			display.onclick= ""
+
+		let hasVoted= await contract.methods.hasVoted(account).call()
+		let tokenCheck= hasVoted.receivedToken
+	
+		if(tokenCheck== false)
+		{
+			let span=document.getElementById('next')
+			span.innerHTML= `<h3 onclick="getToken()">Get Tokens</h3>`
+		}
+}
+
+async function getToken()
+{
+	contract.methods.getToken().send({from:account})
+	init()
 }
 
 async function updateData()
@@ -832,19 +865,6 @@ async function updateData()
         phase= "Results"
         winner= getWinner()
     }
-}
-
-async function approve()
-{
-	const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
-    const _account= accounts[0]
-	account = _account
-
-    token.methods.approve(contractAddress, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({from:account})
-
-	var lbl= document.getElementById('lbl-wallet')
-	lbl.classList.add("show")
-	lbl.innerHTML= "Connected: " + account
 }
 
 function updateFE()
@@ -938,8 +958,6 @@ function showResult()
 				table.innerHTML+= row
 			}
 	}
-}
 
-init()
-document.getElementById("btn-approve").onclick= approve
-document.getElementById("btn-refresh").onclick= refresh
+	//Need to add CancelVote updates
+}

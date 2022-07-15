@@ -770,3 +770,38 @@ const tokenABI= [
 		"type": "function"
 	}
 ]
+
+let owner
+let contract
+let token
+let candidateCount
+let cycleCount
+let voterCount
+let winner
+let phase
+let candidates= []
+
+
+async function init()
+{
+	const provider= await detectEthereumProvider()
+
+	const web3= new Web3(provider)
+	const _contract= new web3.eth.Contract(
+		contractABI, contractAddress
+	)
+	const _token= new web3.eth.Contract(
+		tokenABI, tokenAddress
+	)
+	contract= _contract
+	token= _token
+
+	updateData()
+}
+
+async function updateData()
+{
+	
+}
+
+init()
