@@ -67,6 +67,10 @@ contract ElectSmartContract is Ownable
         {
             voteStart = phase.setUp;
             emit phaseChange("setUp");
+            candidateCount = 0;
+            voterCount = 0;
+            cycleCount++;
+            winner = 0;
         }
     }
 
@@ -98,7 +102,6 @@ contract ElectSmartContract is Ownable
     function addVote(uint _idCount) public 
     {
         require(voteStart == phase.voting, "Not voting phase");
-        require(_idCount != 0, "Require valid candidate");
         require(_idCount <= candidateCount, "Require valid candidate");
         require(token.balanceOf(msg.sender) != 0, "Invalid balance");
         require(hasVoted[msg.sender].cycleVoted != cycleCount, "You have already voted");
@@ -112,6 +115,7 @@ contract ElectSmartContract is Ownable
         hasVoted[msg.sender].receivedToken = false;
 
         emit userVotedFor(msg.sender, _idCount);
+        voterCount++;
     }
 
     function cancelVote() public 
@@ -130,6 +134,7 @@ contract ElectSmartContract is Ownable
         hasVoted[msg.sender].receivedToken = true;
 
         emit userCanceledVote(msg.sender, _temp);
+        voterCount--;
     }
 
     function getWinner() public view returns (uint win)
@@ -141,6 +146,7 @@ contract ElectSmartContract is Ownable
     function getToken() public
     {
         require(hasVoted[msg.sender].receivedToken == false, "You've already received your tokens");
+        require(hasVoted[msg.sender].cycleVoted != cycleCount, "You've already voted for this cycle");
 
             token.transfer(msg.sender, 1*(10**18));
             hasVoted[msg.sender].receivedToken = true;
@@ -165,7 +171,7 @@ contract ElectSmartContract is Ownable
 
     function withdrawFunds() public onlyOwner
     {
-        token.transfer(msg.sender, (address(this).balance*(10**18)));
+        token.transfer(msg.sender, token.balanceOf(address(this)));
     }
 
     function addFunds(uint amount) public onlyOwner

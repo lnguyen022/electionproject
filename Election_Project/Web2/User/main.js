@@ -1,90 +1,7 @@
 
-const contractAddress= '0xEFC8b8577798b357276278758EE7a33b17DbdbcF'
+const contractAddress= '0xD7615e8ECeD413db071934758B15Cb42184d579B'
 const tokenAddress= '0x5944F2F4af55167Bc57Fa2130be6c2212C6d474b'
 const contractABI= [
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "previousOwner",
-				"type": "address"
-			},
-			{
-				"indexed": true,
-				"internalType": "address",
-				"name": "newOwner",
-				"type": "address"
-			}
-		],
-		"name": "OwnershipTransferred",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "_phase",
-				"type": "string"
-			}
-		],
-		"name": "phaseChange",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "userAddCanceled",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "candVotedForCanceled",
-				"type": "uint256"
-			}
-		],
-		"name": "userCanceledVote",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "userAddReceived",
-				"type": "address"
-			}
-		],
-		"name": "userReceivedToken",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": false,
-				"internalType": "address",
-				"name": "userAdd",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "candVotedFor",
-				"type": "uint256"
-			}
-		],
-		"name": "userVotedFor",
-		"type": "event"
-	},
 	{
 		"inputs": [
 			{
@@ -146,6 +63,49 @@ const contractABI= [
 		"type": "function"
 	},
 	{
+		"inputs": [
+			{
+				"internalType": "contract ERC20",
+				"name": "_token",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "previousOwner",
+				"type": "address"
+			},
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "newOwner",
+				"type": "address"
+			}
+		],
+		"name": "OwnershipTransferred",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_phase",
+				"type": "string"
+			}
+		],
+		"name": "phaseChange",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "renounceOwnership",
 		"outputs": [],
@@ -166,22 +126,62 @@ const contractABI= [
 		"type": "function"
 	},
 	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "userAddCanceled",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "candVotedForCanceled",
+				"type": "uint256"
+			}
+		],
+		"name": "userCanceledVote",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "userAddReceived",
+				"type": "address"
+			}
+		],
+		"name": "userReceivedToken",
+		"type": "event"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": false,
+				"internalType": "address",
+				"name": "userAdd",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "candVotedFor",
+				"type": "uint256"
+			}
+		],
+		"name": "userVotedFor",
+		"type": "event"
+	},
+	{
 		"inputs": [],
 		"name": "withdrawFunds",
 		"outputs": [],
 		"stateMutability": "nonpayable",
 		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "contract ERC20",
-				"name": "_token",
-				"type": "address"
-			}
-		],
-		"stateMutability": "nonpayable",
-		"type": "constructor"
 	},
 	{
 		"inputs": [],
@@ -756,12 +756,16 @@ let voterCount
 let winner
 let phase // SetUp= 1, voting= 2, result= 3
 let candidates= []
+let votedFor
+let userCycle
 let _showResults= false
+let _check=false
 
-async function init()
+function init()
 {
-	let body= document.body
+	const body= document.body
 	body.innerHTML= `
+	<div>
 	<h1>Election</h1>
 
         <div id="phases" class="div1">
@@ -783,8 +787,9 @@ async function init()
         </table>
 
         <button id="btn-refresh" onclick="refresh()">Refresh</button>
+		</div>
 	`
-	var lbl= document.getElementById('lbl-wallet')
+	const lbl= document.getElementById('lbl-wallet')
 		lbl.classList.add("show")
 		lbl.innerHTML= "Connected: " + account
 
@@ -814,25 +819,39 @@ async function approve()
 		token.methods.approve(contractAddress, "0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff").send({from:account})
 
 
-		let display= document.getElementById('cnt-wallet')
+		const display= document.getElementById('cnt-wallet')
 			display.style.fontSize= "20px"
 			display.innerHTML= `Wallet: ${account}`
 			display.onclick= ""
 
-		let hasVoted= await contract.methods.hasVoted(account).call()
-		let tokenCheck= hasVoted.receivedToken
-	
-		if(tokenCheck== false)
-		{
-			let span=document.getElementById('next')
-			span.innerHTML= `<h3 onclick="getToken()">Get Tokens</h3>`
-		}
+		getToken(1)
 }
 
-async function getToken()
+
+async function getToken(check)
 {
-	contract.methods.getToken().send({from:account})
-	init()
+	const hasVoted= await contract.methods.hasVoted(account).call()
+    cycleCount= await contract.methods.cycleCount().call()
+	const span=document.getElementById('next')
+
+	if(hasVoted.receivedToken== true || hasVoted.cycleVoted== cycleCount)
+	{
+		init()
+	}
+	else if(check== 1)
+	{
+		let span=document.getElementById('next')
+		span.innerHTML= `<h3 id= "btn-gettoken" onclick="getToken(2)">Get Tokens</h3>`
+	}
+	else if(check== 2)
+	{
+		span.innerHTML= `<h3 id= "btn-gettoken" onclick="getToken(3)">Confirm >></h3>`
+		contract.methods.getToken().send({from:account})
+	}
+	else if(check== 3)
+	{
+		getToken(1)
+	}
 }
 
 async function updateData()
@@ -842,11 +861,14 @@ async function updateData()
     voterCount= await contract.methods.voterCount().call()
     let temp= await contract.methods.getPhase().call()
 	candidates = []
+	let hasVoted= await contract.methods.hasVoted(account).call()
+	votedFor= hasVoted.votedFor
+	userCycle= hasVoted.cycleVoted
 
-    for(let i= 1; i<candidateCount; i++)
+    for(let i= 0; i<candidateCount; i++)
     {
         const candidate= await contract.methods.totalCandidate(i).call()
-        candidates.push(candidate)
+        candidates[i]= candidate
     }
 
     if(temp== 1)
@@ -869,36 +891,61 @@ async function updateData()
 
 function updateFE()
 {
-    var div= document.getElementById('phases')
-    var table= document.getElementById('table-body')
+    const div= document.getElementById('phases')
+    const table= document.getElementById('table-body')
 
-	table.innerHTML = ""
+	table.innerHTML= ""
 
-    div.innerHTML = `
+    div.innerHTML= `
         Phase: ${phase}
         <br>
         Cycle: ${cycleCount}
       	`
+		
+		if(userCycle!= cycleCount && phase=="Voting")
+		{
+			for(let i=0; i<candidateCount; i++)
+			{
+				var row= `
+				<tr>
+				<td>${candidates[i].candID}</td>
+				<td>${candidates[i].candName}</td>
+				<td>${candidates[i].votes}</td>
+				<td><button id = vote-cand${candidates[i].candID} onclick= vote(${candidates[i].candID})>Vote</button></td>
+				</tr>`
+				table.innerHTML+= row
+			}
+		}
+		else
+		{
+			for(let i= 0; i<candidateCount; i++)
+			{
+				var row= `
+				<tr>
+				<td>${candidates[i].candID}</td>
+				<td>${candidates[i].candName}</td>
+				<td>${candidates[i].votes}</td>
+				<td><button id = vote-cand${candidates[i].candID} class="disabled")>Vote</button></td>
+				</tr>`
+				table.innerHTML+= row
+			}
 
-        for(let i=0; i<candidateCount; i++)
-        {
-            var row= `
-            <tr>
-            <td>${candidates[i].candID}</td>
-            <td>${candidates[i].candName}</td>
-            <td>${candidates[i].votes}</td>
-            <td><button id = vote-cand${candidates[i].candID} onclick= vote(${candidates[i].candID})>Vote</button></td>
-            </tr>`
-            table.innerHTML+= row
-        }
+			if(_check== false)
+			{
+				_check=true
+				document.body.innerHTML+=`
+				<h4 id="cancel" onmouseover= "cancelIn()" onmouseout= "cancelOut()" onclick= "cancelVote()">Voted: ${candidates[votedFor].candName}</h4>
+				`
+			}
+		}
 }
 
 async function getWinner()
 {
-	winner= await contract.methods.getWinner().call()
-	let i= parseInt(winner)
-	winner = candidates[i-1].candName
-	
+	const _winner= await contract.methods.getWinner().call()
+	let i= parseInt(_winner)
+	winner= candidates[i].candName
+
 	const bod= document.body
 	bod.innerHTML= ""
 	bod.innerHTML= `
@@ -945,19 +992,50 @@ function showResult()
 				</tbody>
 			</table>`
 
-			var table= document.getElementById('table-body')
+	const table= document.getElementById('table-body')
 
-			for(let i=0; i<candidateCount; i++)
-			{
-				var row= `
-				<tr>
-				<td>${candidates[i].candID}</td>
-				<td>${candidates[i].candName}</td>
-				<td>${candidates[i].votes}</td>
-				</tr>`
-				table.innerHTML+= row
-			}
+	for(let i=0; i<candidateCount; i++)
+	{
+		var row= `
+		<tr>
+		<td>${candidates[i].candID}</td>
+		<td>${candidates[i].candName}</td>
+		<td>${candidates[i].votes}</td>
+		</tr>`
+		table.innerHTML+= row
 	}
+	}
+}
 
-	//Need to add CancelVote updates
+function cancelIn()
+{
+	const ca= document.getElementById("cancel")
+
+	if(userCycle== cycleCount)
+	{
+		ca.innerHTML= "Cancel Vote?"
+	}
+	else
+	{
+		ca.innerHTML= "You need to Vote"
+	}
+}
+
+function cancelOut()
+{
+	const ca= document.getElementById("cancel")
+
+	if(userCycle== cycleCount)
+	{
+		ca.innerHTML= "Voted: "+ candidates[votedFor].candName
+	}
+	else
+	{
+		ca.innerHTML= "Vote for someone"
+	}
+}
+
+async function cancelVote()
+{
+	contract.methods.cancelVote().send({from:account})
 }
